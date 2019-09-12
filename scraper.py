@@ -1,4 +1,5 @@
 import requests
+import smtplib
 from bs4 import BeautifulSoup
 
 def check_price():
@@ -16,9 +17,34 @@ def check_price():
     price = soup2.find(id='priceblock_ourprice').get_text()
     converted_price = float(price[1:6])
 
-    if(converted_price < 25.00):
-        send_email()
-
     print(converted_price)
 
-def send_email(): 
+    if(converted_price > 25):
+        send_mail()
+#
+def send_mail():
+    # print('got here')
+    server = smtplib.SMTP('smpt.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.ehlo()
+
+    server.login('johnlinatoc1@gmail.com', 'timuxagxugugoitw')
+
+    subject = 'Price fell down!'
+
+    body = 'test'
+
+    msg = f"Subject: {subject}\n\n{body}"
+
+    server.sendmail(
+        'johnlinatoc1@gmail.com',
+        'johnlinatoc1227@gmail.com',
+        msg
+    )
+
+    print('EMAIL HAS BEEN SENT')
+
+    server.quit()
+
+check_price()
